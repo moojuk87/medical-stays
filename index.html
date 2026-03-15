@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Medical Stay Seoul — Our Stays</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0D1B2A; --ink2:#1B2F47;
+  --gold:#C9A84C; --gold2:#E8C96A;
+  --sky:#2E9CCA;
+  --cream:#F7F3EE; --warm:#EDE8E0;
+  --muted:#8A9BB0;
+  --hanok:#8D6E3F;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--cream);color:var(--ink);}
+
+/* HERO */
+.hero{
+  background:var(--ink);
+  min-height:320px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  text-align:center;padding:60px 24px 48px;
+  position:relative;overflow:hidden;
+}
+.hero-glow{
+  position:absolute;width:600px;height:600px;border-radius:50%;
+  background:radial-gradient(circle,rgba(46,156,202,.18) 0%,transparent 70%);
+  top:-200px;left:50%;transform:translateX(-50%);
+  pointer-events:none;
+}
+.hero-grain{
+  position:absolute;inset:0;opacity:.05;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size:200px;pointer-events:none;
+}
+.hero-eyebrow{position:relative;font-size:11px;font-weight:600;letter-spacing:4px;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+.hero h1{position:relative;font-family:'Playfair Display',serif;font-size:clamp(34px,7vw,56px);font-weight:700;color:#fff;line-height:1.12;margin-bottom:14px;}
+.hero h1 em{color:var(--gold);font-style:italic;}
+.hero p{position:relative;font-size:14px;color:rgba(255,255,255,.5);max-width:440px;line-height:1.75;margin-bottom:28px;}
+.hero-cta{
+  position:relative;display:inline-flex;align-items:center;gap:10px;
+  background:var(--gold);color:var(--ink);font-size:14px;font-weight:700;
+  padding:13px 28px;border-radius:50px;text-decoration:none;
+  box-shadow:0 8px 28px rgba(201,168,76,.35);transition:.25s;
+}
+.hero-cta:hover{transform:translateY(-3px);box-shadow:0 14px 40px rgba(201,168,76,.45);}
+
+/* FILTER */
+.filterbar{background:#fff;border-bottom:1px solid #E5E1DB;position:sticky;top:0;z-index:90;box-shadow:0 2px 14px rgba(0,0,0,.06);}
+.filterbar-inner{max-width:1100px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none;height:54px;}
+.filterbar-inner::-webkit-scrollbar{display:none;}
+.fbtn{flex-shrink:0;background:var(--warm);color:var(--ink);border:none;border-radius:40px;padding:7px 15px;font-size:12px;font-weight:600;cursor:pointer;transition:.2s;font-family:'Outfit',sans-serif;white-space:nowrap;}
+.fbtn:hover{background:var(--ink2);color:var(--gold);}
+.fbtn.on{background:var(--ink);color:var(--gold);}
+.fcount{margin-left:auto;font-size:12px;color:var(--muted);white-space:nowrap;flex-shrink:0;font-weight:600;}
+
+/* GRID */
+.main{max-width:1100px;margin:0 auto;padding:36px 20px 72px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:22px;}
+
+/* CARD */
+.card{background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 2px 14px rgba(13,27,42,.07);transition:transform .28s,box-shadow .28s;cursor:pointer;}
+.card:hover{transform:translateY(-6px);box-shadow:0 14px 44px rgba(13,27,42,.13);}
+.card.hide{display:none;}
+
+.card-img{width:100%;height:196px;position:relative;overflow:hidden;}
+.card-img .ph{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;}
+.card[data-area="mapo"]    .ph{background:linear-gradient(135deg,#0D1B2A,#1A4060);}
+.card[data-area="hanok"]   .ph{background:linear-gradient(135deg,#3D1C00,#8D6E3F);}
+.card[data-area="seongsu"] .ph{background:linear-gradient(135deg,#0A2A1A,#1A6040);}
+.card[data-area="hongdae"] .ph{background:linear-gradient(135deg,#280A3A,#7D3C98);}
+.card[data-area="gangnam"] .ph{background:linear-gradient(135deg,#2A0A0A,#C0392B);}
+.card[data-area="yongsan"] .ph{background:linear-gradient(135deg,#1A1A0A,#2E9CCA);}
+.card[data-area="jongno"]  .ph{background:linear-gradient(135deg,#0A1A2A,#2C6E8A);}
+.card[data-area="songpa"]  .ph{background:linear-gradient(135deg,#0A1A2A,#1A5F7A);}
+.card[data-area="busan"]   .ph{background:linear-gradient(135deg,#001A2A,#0077B6);}
+.card[data-area="etc"]     .ph{background:linear-gradient(135deg,#1A1A2A,#2E4060);}
+.ph-icon{font-size:34px;opacity:.3;}
+.ph-hint{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,.2);}
+.card-img img{width:100%;height:100%;object-fit:cover;transition:transform .45s;display:none;position:absolute;inset:0;}
+.card-img img.loaded{display:block;}
+.card:hover .card-img img.loaded{transform:scale(1.05);}
+
+/* 번호 배지 */
+.num-badge{
+  position:absolute;top:10px;left:10px;
+  background:rgba(13,27,42,.75);backdrop-filter:blur(4px);
+  color:#fff;font-size:10px;font-weight:700;
+  padding:3px 9px;border-radius:20px;z-index:2;
+}
+.badge{position:absolute;top:10px;right:10px;font-size:9px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 10px;border-radius:20px;z-index:2;}
+.badge.hanok{background:var(--hanok);color:#fff;}
+.badge.busan{background:#0077B6;color:#fff;}
+
+.card-body{padding:16px 18px 18px;}
+.card-loc{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:var(--sky);letter-spacing:.3px;margin-bottom:4px;}
+.card-name{font-family:'Playfair Display',serif;font-size:17px;font-weight:700;color:var(--ink);margin-bottom:10px;line-height:1.25;}
+
+/* 방/화장실 항상 표시 */
+.card-specs{display:flex;gap:8px;margin-bottom:14px;}
+.spec{display:flex;align-items:center;gap:4px;font-size:11px;font-weight:600;color:var(--ink);background:var(--warm);padding:4px 10px;border-radius:20px;}
+.spec.zero{color:var(--muted);}
+
+.card-cta{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;padding:11px;border-radius:12px;background:var(--ink);color:#fff;font-size:13px;font-weight:600;border:none;cursor:pointer;transition:.2s;font-family:'Outfit',sans-serif;text-decoration:none;}
+.card-cta:hover{background:var(--gold);color:var(--ink);}
+
+/* MODAL */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;align-items:flex-end;justify-content:center;padding:0;}
+.overlay.open{display:flex;}
+.modal{background:#fff;width:100%;max-width:520px;border-radius:28px 28px 0 0;overflow:hidden;max-height:92vh;overflow-y:auto;animation:slideUp .3s cubic-bezier(.25,.8,.25,1);}
+@media(min-width:600px){.overlay{align-items:center;padding:20px;}.modal{border-radius:24px;max-height:88vh;}}
+@keyframes slideUp{from{transform:translateY(60px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-drag{width:40px;height:4px;background:#E0DDD7;border-radius:2px;margin:14px auto 0;}
+.modal-img{width:100%;height:220px;position:relative;overflow:hidden;background:var(--ink2);}
+.modal-img .mph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:52px;background:linear-gradient(135deg,var(--ink),var(--sky));}
+.modal-img img{width:100%;height:100%;object-fit:cover;display:none;}
+.modal-img img.loaded{display:block;}
+.modal-close{position:absolute;top:12px;right:12px;width:32px;height:32px;border-radius:50%;background:rgba(0,0,0,.5);backdrop-filter:blur(4px);color:#fff;font-size:15px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:5;}
+/* 슬라이더 */
+.slide-btn{position:absolute;top:50%;transform:translateY(-50%);width:36px;height:36px;border-radius:50%;background:rgba(0,0,0,.45);backdrop-filter:blur(4px);color:#fff;font-size:22px;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:.2s;z-index:5;}
+.slide-btn:hover{background:rgba(0,0,0,.7);}
+.slide-btn.prev{left:10px;}
+.slide-btn.next{right:10px;}
+.modal-dots{position:absolute;bottom:9px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:5;}
+.dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.4);cursor:pointer;transition:.2s;}
+.dot.on{background:#fff;transform:scale(1.3);}
+.modal-body{padding:22px 22px 28px;}
+.modal-loc{font-size:11px;font-weight:700;color:var(--sky);letter-spacing:.5px;margin-bottom:4px;}
+.modal-name{font-family:'Playfair Display',serif;font-size:23px;font-weight:700;margin-bottom:12px;line-height:1.2;}
+.modal-specs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;}
+.modal-amenities{background:var(--warm);border-radius:14px;padding:13px 15px;margin-bottom:14px;}
+.modal-amenities h4{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);margin-bottom:9px;}
+.amenity-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.amenity{font-size:12px;color:var(--ink);display:flex;align-items:center;gap:5px;}
+.modal-notice{background:#FDF8EE;border:1px solid rgba(201,168,76,.3);border-radius:12px;padding:13px 15px;font-size:12px;color:#7A6030;line-height:1.7;margin-bottom:16px;}
+.modal-btns{display:flex;gap:9px;}
+.modal-btns a{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:12px;border-radius:12px;font-size:13px;font-weight:700;text-decoration:none;transition:.2s;}
+.mbtn-kakao{background:#FEE500;color:#3C1E1E;}
+.mbtn-kakao:hover{background:#F5DC00;}
+.mbtn-insta{background:var(--ink);color:#fff;}
+.mbtn-insta:hover{background:var(--ink2);}
+
+/* FOOTER */
+.footer-cta{background:var(--ink);padding:48px 24px;text-align:center;}
+.footer-cta h2{font-family:'Playfair Display',serif;font-size:26px;color:#fff;margin-bottom:7px;}
+.footer-cta p{font-size:13px;color:rgba(255,255,255,.45);margin-bottom:22px;}
+.footer-cta a{display:inline-flex;align-items:center;gap:9px;background:var(--gold);color:var(--ink);font-size:14px;font-weight:700;padding:13px 28px;border-radius:50px;text-decoration:none;transition:.25s;}
+.footer-cta a:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(201,168,76,.4);}
+
+@media(max-width:600px){.grid{grid-template-columns:1fr;}.modal-btns{flex-direction:column;}}
+
+/* IMHJ 배지 */
+.badge.imhj{background:var(--gold);color:var(--ink);}
+.spec.guests{background:#E8F4FF;color:#1A5F8A;}
+
+/* LIGHTBOX */
+.lightbox{
+  display:none;position:fixed;inset:0;z-index:2000;
+  background:rgba(0,0,0,.92);
+  align-items:center;justify-content:center;
+  cursor:zoom-out;
+}
+.lightbox.open{display:flex;}
+.lightbox-img{
+  max-width:92vw;max-height:92vh;
+  object-fit:contain;
+  border-radius:6px;
+  box-shadow:0 8px 48px rgba(0,0,0,.6);
+  cursor:default;
+  user-select:none;
+}
+.lightbox-close{
+  position:fixed;top:18px;right:22px;
+  color:#fff;font-size:28px;font-weight:300;
+  background:none;border:none;cursor:pointer;
+  opacity:.7;transition:.2s;line-height:1;z-index:2001;
+}
+.lightbox-close:hover{opacity:1;}
+.lightbox-prev,.lightbox-next{
+  position:fixed;top:50%;transform:translateY(-50%);
+  color:#fff;font-size:44px;font-weight:300;
+  background:none;border:none;cursor:pointer;
+  opacity:.6;transition:.2s;line-height:1;z-index:2001;
+  padding:0 18px;
+}
+.lightbox-prev{left:0;} .lightbox-next{right:0;}
+.lightbox-prev:hover,.lightbox-next:hover{opacity:1;}
+.lightbox-counter{
+  position:fixed;bottom:22px;left:50%;transform:translateX(-50%);
+  color:rgba(255,255,255,.6);font-size:13px;font-family:'Outfit',sans-serif;
+  z-index:2001;
+}
+/* 모달 사진에 클릭 힌트 */
+#modal-photo.loaded{cursor:zoom-in;}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-grain"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-eyebrow">✦ Medical Stay Seoul</div>
+  <h1>Hand-Picked Stays<br>for <em>Your Recovery</em></h1>
+  <p>Every property is curated for post-procedure comfort — concierge service, care essentials, and peace of mind included.</p>
+  <a href="https://open.kakao.com/o/sqJsykki" target="_blank" class="hero-cta">
+    💬 &nbsp;Inquire via KakaoTalk
+  </a>
+</section>
+
+<div class="filterbar">
+  <div class="filterbar-inner">
+    <button class="fbtn on" onclick="setFilter('all',this)">All Stays</button>
+    <button class="fbtn" onclick="setFilter('mapo',this)">Mapo · Hapjeong</button>
+    <button class="fbtn" onclick="setFilter('hanok',this)">🏯 Hanok</button>
+    <button class="fbtn" onclick="setFilter('seongsu',this)">Seongsu</button>
+    <button class="fbtn" onclick="setFilter('hongdae',this)">Hongdae</button>
+    <button class="fbtn" onclick="setFilter('gangnam',this)">Gangnam</button>
+    <button class="fbtn" onclick="setFilter('yongsan',this)">Yongsan · Seoul Station</button>
+    <button class="fbtn" onclick="setFilter('jongno',this)">Jongno · Dongdaemun</button>
+    <button class="fbtn" onclick="setFilter('songpa',this)">Songpa · Jamsil</button>
+    <button class="fbtn" onclick="setFilter('busan',this)">🌊 Busan</button>
+    <span class="fcount" id="fc">50 stays</span>
+  </div>
+</div>
+
+<div class="main">
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="footer-cta">
+  <h2>Can't find the right stay?</h2>
+  <p>Tell us your procedure date and preferences — we'll find the perfect fit.</p>
+  <a href="https://open.kakao.com/o/sqJsykki" target="_blank">💬 &nbsp;Chat on KakaoTalk</a>
+</div>
+
+<!-- MODAL -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="modal-drag"></div>
+    <div class="modal-img">
+      <div class="mph" id="modal-ph">🏠</div>
+      <img id="modal-photo" alt="">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <button id="modal-prev" class="slide-btn prev" onclick="goPhoto(window._photoIdx-1)">‹</button>
+      <button id="modal-next" class="slide-btn next" onclick="goPhoto(window._photoIdx+1)">›</button>
+      <div id="modal-dots" class="modal-dots"></div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-loc"  id="modal-loc"></div>
+      <div class="modal-name" id="modal-name"></div>
+      <div class="modal-specs" id="modal-specs"></div>
+      <div class="modal-amenities">
+        <h4>Recovery Amenities Included</h4>
+        <div class="amenity-grid">
+          <div class="amenity">❄️ Ice Pack Fridge</div>
+          <div class="amenity">💨 Humidifier</div>
+          <div class="amenity">🛏 Recovery Bedding</div>
+          <div class="amenity">🛒 Delivery Setup</div>
+          <div class="amenity">🩹 First Aid Kit</div>
+          <div class="amenity">📱 24h Concierge</div>
+        </div>
+      </div>
+      <div class="modal-notice">
+        🔒 To protect your exclusive rate, we don't share direct listing links.<br>
+        Contact us below — we'll confirm availability and handle everything for you.
+      </div>
+      <div class="modal-btns">
+        <a href="https://open.kakao.com/o/sqJsykki" target="_blank" class="mbtn-kakao">💬 KakaoTalk</a>
+        <a href="https://instagram.com/seoultobusan2025" target="_blank" class="mbtn-insta">📸 Instagram DM</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const PHOTO_DATA = {
+  "PIOLA Stay Dongdaemun1": [
+    "images/img_001.jpg",
+    "images/img_002.jpg",
+    "images/img_003.jpg",
+    "images/img_004.jpg",
+    "images/img_005.jpg",
+    "images/img_006.jpg",
+    "images/img_007.jpg"
+  ],
+  "PIOLA Stay Dongdaemun2": [
+    "images/img_008.jpg",
+    "images/img_009.jpg",
+    "images/img_010.jpg",
+    "images/img_011.jpg",
+    "images/img_012.jpg",
+    "images/img_013.jpg",
+    "images/img_014.jpg"
+  ],
+  "PIOLA Stay Dongdaemun3": [
+    "images/img_015.jpg",
+    "images/img_016.jpg",
+    "images/img_017.jpg",
+    "images/img_018.jpg",
+    "images/img_019.jpg",
+    "images/img_020.jpg",
+    "images/img_021.jpg"
+  ],
+  "PIOLA Stay Mapo": [
+    "images/img_022.jpg",
+    "images/img_023.jpg",
+    "images/img_024.jpg",
+    "images/img_025.jpg",
+    "images/img_026.jpg",
+    "images/img_027.jpg",
+    "images/img_028.jpg"
+  ],
+  "JuneStayHongdae": [
+    "images/img_029.jpg",
+    "images/img_030.jpg",
+    "images/img_031.jpg",
+    "images/img_032.jpg",
+    "images/img_033.jpg",
+    "images/img_034.jpg"
+  ],
+  "WonieStayHongdae": [
+    "images/img_035.jpg",
+    "images/img_036.jpg",
+    "images/img_037.jpg",
+    "images/img_038.jpg",
+    "images/img_039.jpg",
+    "images/img_040.jpg",
+    "images/img_041.jpg"
+  ],
+  "restinjamsil": [
+    "images/img_042.jpg",
+    "images/img_043.jpg",
+    "images/img_044.jpg",
+    "images/img_045.jpg",
+    "images/img_046.jpg",
+    "images/img_047.jpg",
+    "images/img_048.jpg"
+  ],
+  "Stay Heritage Seongsoo": [
+    "images/img_049.jpg",
+    "images/img_050.jpg",
+    "images/img_051.jpg",
+    "images/img_052.jpg",
+    "images/img_053.jpg",
+    "images/img_054.jpg",
+    "images/img_055.jpg"
+  ],
+  "Hongik Chae": [
+    "images/img_056.jpg",
+    "images/img_057.jpg",
+    "images/img_058.jpg",
+    "images/img_059.jpg",
+    "images/img_060.jpg",
+    "images/img_061.jpg",
+    "images/img_062.jpg"
+  ],
+  "Memory Maison": [
+    "images/img_063.jpg",
+    "images/img_064.jpg",
+    "images/img_065.jpg",
+    "images/img_066.jpg",
+    "images/img_067.jpg",
+    "images/img_068.jpg",
+    "images/img_069.jpg"
+  ],
+  "Su Casa Yeonnam": [
+    "images/img_070.jpg",
+    "images/img_071.jpg",
+    "images/img_072.jpg",
+    "images/img_073.jpg",
+    "images/img_074.jpg",
+    "images/img_075.jpg",
+    "images/img_076.jpg"
+  ],
+  "MangwonRoo": [
+    "images/img_077.jpg",
+    "images/img_078.jpg",
+    "images/img_079.jpg",
+    "images/img_080.jpg",
+    "images/img_081.jpg",
+    "images/img_082.jpg",
+    "images/img_083.jpg"
+  ],
+  "Stay Heritage urban loft arex gongdeok": [
+    "images/img_084.jpg",
+    "images/img_085.jpg",
+    "images/img_086.jpg",
+    "images/img_087.jpg",
+    "images/img_088.jpg",
+    "images/img_089.jpg",
+    "images/img_090.jpg"
+  ],
+  "Stay Heritage Hanok Seongsu": [
+    "images/img_091.jpg",
+    "images/img_092.jpg",
+    "images/img_093.jpg",
+    "images/img_094.jpg",
+    "images/img_095.jpg",
+    "images/img_096.jpg",
+    "images/img_097.jpg"
+  ],
+  "Stay Heritage Insadong": [
+    "images/img_098.jpg",
+    "images/img_099.jpg",
+    "images/img_100.jpg",
+    "images/img_101.jpg",
+    "images/img_102.jpg",
+    "images/img_103.jpg",
+    "images/img_104.jpg"
+  ],
+  "The Lumi Stay": [
+    "images/img_105.jpg",
+    "images/img_106.jpg",
+    "images/img_107.jpg",
+    "images/img_108.jpg",
+    "images/img_109.jpg",
+    "images/img_110.jpg"
+  ],
+  "Stay Heritage Terrace House": [
+    "images/img_111.jpg",
+    "images/img_112.jpg",
+    "images/img_113.jpg",
+    "images/img_114.jpg",
+    "images/img_115.jpg",
+    "images/img_116.jpg",
+    "images/img_117.jpg"
+  ],
+  "Piola Stay Heritage": [
+    "images/img_118.jpg",
+    "images/img_119.jpg",
+    "images/img_120.jpg",
+    "images/img_121.jpg",
+    "images/img_122.jpg",
+    "images/img_123.jpg",
+    "images/img_124.jpg"
+  ],
+  "Stay Heritage Seoul Station": [
+    "images/img_125.jpg",
+    "images/img_126.jpg",
+    "images/img_127.jpg",
+    "images/img_128.jpg",
+    "images/img_129.jpg",
+    "images/img_130.jpg"
+  ],
+  "gac": [
+    "images/img_131.jpg",
+    "images/img_132.jpg",
+    "images/img_133.jpg",
+    "images/img_134.jpg",
+    "images/img_135.jpg",
+    "images/img_136.jpg",
+    "images/img_137.jpg"
+  ],
+  "stayeum": [
+    "images/img_138.jpg",
+    "images/img_139.jpg",
+    "images/img_140.jpg",
+    "images/img_141.jpg",
+    "images/img_142.jpg"
+  ],
+  "Stay Aurora Yongsan": [
+    "images/img_143.jpg",
+    "images/img_144.jpg",
+    "images/img_145.jpg"
+  ],
+  "Onul Stay": [
+    "images/img_146.jpg",
+    "images/img_147.jpg",
+    "images/img_148.jpg",
+    "images/img_149.jpg"
+  ],
+  "Cozio Stay": [
+    "images/img_150.jpg",
+    "images/img_151.jpg",
+    "images/img_152.jpg",
+    "images/img_153.jpg",
+    "images/img_154.jpg",
+    "images/img_155.jpg"
+  ],
+  "Junie Stay": [
+    "images/img_156.jpg",
+    "images/img_157.jpg",
+    "images/img_158.jpg",
+    "images/img_159.jpg",
+    "images/img_160.jpg"
+  ],
+  "Owner Aum": [
+    "images/img_161.jpg",
+    "images/img_162.jpg",
+    "images/img_163.jpg",
+    "images/img_164.jpg",
+    "images/img_165.jpg",
+    "images/img_166.jpg",
+    "images/img_167.jpg"
+  ],
+  "stayforet": [
+    "images/img_168.jpg",
+    "images/img_169.jpg",
+    "images/img_170.jpg",
+    "images/img_171.jpg",
+    "images/img_172.jpg"
+  ],
+  "piolastay seongsu": [
+    "images/img_173.jpg",
+    "images/img_174.jpg",
+    "images/img_175.jpg",
+    "images/img_176.jpg",
+    "images/img_177.jpg",
+    "images/img_178.jpg",
+    "images/img_179.jpg",
+    "images/img_180.jpg",
+    "images/img_181.jpg",
+    "images/img_182.jpg"
+  ],
+  "pasetostayhongdae": [
+    "images/img_183.jpg",
+    "images/img_184.jpg",
+    "images/img_185.jpg",
+    "images/img_186.jpg",
+    "images/img_187.jpg",
+    "images/img_188.jpg"
+  ],
+  "bunnystay": [
+    "images/img_189.jpg",
+    "images/img_190.jpg",
+    "images/img_191.jpg",
+    "images/img_192.jpg",
+    "images/img_193.jpg",
+    "images/img_194.jpg"
+  ],
+  "Check in H": [
+    "images/img_195.jpg",
+    "images/img_196.jpg",
+    "images/img_197.jpg",
+    "images/img_198.jpg",
+    "images/img_199.jpg",
+    "images/img_200.jpg",
+    "images/img_201.jpg",
+    "images/img_202.jpg",
+    "images/img_203.jpg"
+  ],
+  "Stay Heritage Urban Loft 2": [
+    "images/img_204.jpg",
+    "images/img_205.jpg",
+    "images/img_206.jpg",
+    "images/img_207.jpg",
+    "images/img_208.jpg",
+    "images/img_209.jpg",
+    "images/img_210.jpg"
+  ],
+  "Chic stay Hapjeong": [
+    "images/img_211.jpg",
+    "images/img_212.jpg",
+    "images/img_213.jpg",
+    "images/img_214.jpg",
+    "images/img_215.jpg"
+  ],
+  "YG stay house": [
+    "images/img_216.jpg",
+    "images/img_217.jpg",
+    "images/img_218.jpg",
+    "images/img_219.jpg",
+    "images/img_220.jpg"
+  ],
+  "Staybusan": [
+    "images/img_221.jpg",
+    "images/img_222.jpg",
+    "images/img_223.jpg",
+    "images/img_224.jpg",
+    "images/img_225.jpg",
+    "images/img_226.jpg"
+  ],
+  "SpaceandMood": [
+    "images/img_227.jpg",
+    "images/img_228.jpg",
+    "images/img_229.jpg",
+    "images/img_230.jpg",
+    "images/img_231.jpg"
+  ],
+  "arumstay": [
+    "images/img_232.jpg",
+    "images/img_233.jpg",
+    "images/img_234.jpg",
+    "images/img_235.jpg",
+    "images/img_236.jpg"
+  ],
+  "stayhavenyongsan": [
+    "images/img_237.jpg",
+    "images/img_238.jpg",
+    "images/img_239.jpg",
+    "images/img_240.jpg",
+    "images/img_241.jpg",
+    "images/img_242.jpg",
+    "images/img_243.jpg"
+  ],
+  "chatstay": [
+    "images/img_244.jpg",
+    "images/img_245.jpg",
+    "images/img_246.jpg",
+    "images/img_247.jpg"
+  ],
+  "Stay Heritage Mapo": [
+    "images/img_248.jpg",
+    "images/img_249.jpg",
+    "images/img_250.jpg",
+    "images/img_251.jpg",
+    "images/img_252.jpg",
+    "images/img_253.jpg",
+    "images/img_254.jpg"
+  ],
+  "Stay Heritage Hapjeong": [
+    "images/img_255.jpg",
+    "images/img_256.jpg",
+    "images/img_257.jpg",
+    "images/img_258.jpg",
+    "images/img_259.jpg",
+    "images/img_260.jpg",
+    "images/img_261.jpg"
+  ],
+  "Stay Heritage Gongdeuk": [
+    "images/img_262.jpg",
+    "images/img_263.jpg",
+    "images/img_264.jpg",
+    "images/img_265.jpg",
+    "images/img_266.jpg",
+    "images/img_267.jpg",
+    "images/img_268.jpg",
+    "images/img_269.jpg"
+  ],
+  "Stay Heritage Gyeongbokgung": [
+    "images/img_270.jpg",
+    "images/img_271.jpg",
+    "images/img_272.jpg",
+    "images/img_273.jpg",
+    "images/img_274.jpg",
+    "images/img_275.jpg",
+    "images/img_276.jpg",
+    "images/img_277.jpg",
+    "images/img_278.jpg",
+    "images/img_279.jpg"
+  ],
+  "Stay Heritage Gyeongbokgung 2": [
+    "images/img_280.jpg",
+    "images/img_281.jpg",
+    "images/img_282.jpg",
+    "images/img_283.jpg",
+    "images/img_284.jpg",
+    "images/img_285.jpg",
+    "images/img_286.jpg",
+    "images/img_286.jpg",
+    "images/img_287.jpg",
+    "images/img_288.jpg",
+    "images/img_289.jpg"
+  ],
+  "Sodaminn": [
+    "images/img_290.jpg",
+    "images/img_291.jpg",
+    "images/img_292.jpg",
+    "images/img_293.jpg",
+    "images/img_294.jpg",
+    "images/img_295.jpg",
+    "images/img_296.jpg",
+    "images/img_297.jpg",
+    "images/img_298.jpg",
+    "images/img_299.jpg",
+    "images/img_300.jpg",
+    "images/img_301.jpg"
+  ],
+  "Stay Heritage Mangwon Market": [
+    "images/img_302.jpg",
+    "images/img_303.jpg",
+    "images/img_304.jpg",
+    "images/img_305.jpg",
+    "images/img_306.jpg",
+    "images/img_307.jpg",
+    "images/img_308.jpg",
+    "images/img_309.jpg"
+  ],
+  "staygyeol": [
+    "images/img_310.jpg",
+    "images/img_311.jpg",
+    "images/img_312.jpg",
+    "images/img_313.jpg",
+    "images/img_314.jpg"
+  ],
+  "Stay The Arts Seoul Forest": [
+    "images/img_315.jpg",
+    "images/img_316.jpg",
+    "images/img_317.jpg",
+    "images/img_318.jpg",
+    "images/img_319.jpg",
+    "images/img_320.jpg",
+    "images/img_321.jpg",
+    "images/img_322.jpg"
+  ],
+  "Stay Heritage Riverview 501": [
+    "images/img_323.jpg",
+    "images/img_324.jpg",
+    "images/img_325.jpg",
+    "images/img_326.jpg",
+    "images/img_327.jpg"
+  ],
+  "Memory Stay 3": [
+    "images/img_328.jpg",
+    "images/img_329.jpg",
+    "images/img_330.jpg",
+    "images/img_331.jpg",
+    "images/img_332.jpg",
+    "images/img_333.jpg",
+    "images/img_334.jpg",
+    "images/img_335.jpg",
+    "images/img_336.jpg",
+    "images/img_337.jpg",
+    "images/img_338.jpg"
+  ]
+};
+const STAYS = [
+  {
+    idx:1, id:"Stay Heritage Gongdeuk", name:"Stay Heritage Gongdeuk",
+    area:"mapo", loc:"Gongdeuk · Mapo",
+    beds:4, baths:2, max:"Up to 12 guests",
+    hanok:false,
+    imhj:true,
+    ph:"🏠"
+  },
+  {
+    idx:2, id:"Stay Heritage Hapjeong", name:"Stay Heritage Hapjeong",
+    area:"mapo", loc:"Hapjeong · Mapo",
+    beds:3, baths:1, max:"Up to 8 guests",
+    hanok:false,
+    imhj:true,
+    ph:"🏠"
+  },
+  {
+    idx:3, id:"Stay Heritage Mangwon Market", name:"Stay Heritage Mangwon Market",
+    area:"mapo", loc:"Mangwon Market · Mapo",
+    beds:4, baths:2, max:"Up to 12 guests",
+    hanok:false,
+    imhj:true,
+    ph:"🏠"
+  },
+  {
+    idx:4, id:"Stay Heritage Mapo", name:"Stay Heritage Mapo",
+    area:"mapo", loc:"Mangwon · Mapo",
+    beds:3, baths:1, max:"Up to 9 guests",
+    hanok:false,
+    imhj:true,
+    ph:"🏠"
+  },
+  {
+    idx:5, id:"Stay Heritage Riverview 501", name:"Stay Heritage Riverview 501",
+    area:"mapo", loc:"Hapjeong · Mapo",
+    beds:2, baths:1, max:"Up to 8 guests",
+    hanok:false,
+    imhj:true,
+    ph:"🏠"
+  },
+  {
+    idx:6, id:"Stay Heritage Terrace House", name:"Stay Heritage Terrace House",
+    area:"mapo", loc:"Gongdeuk · Mapo",
+    beds:4, baths:3, max:"Up to 8 guests",
+    hanok:false,
+    imhj:true,
+    ph:"🏠"
+  },
+  {
+    idx:7, id:"Stay Heritage Urban Loft 2", name:"Stay Heritage Urban Loft 2",
+    area:"mapo", loc:"Gongdeuk · Mapo",
+    beds:3, baths:2, max:"Up to 8 guests",
+    hanok:false,
+    imhj:true,
+    ph:"🏠"
+  },
+  {
+    idx:8, id:"The Lumi Stay", name:"The Lumi Stay",
+    area:"mapo", loc:"Gongdeuk · Mapo",
+    beds:3, baths:3, max:"Up to 9 guests",
+    hanok:false,
+    imhj:true,
+    ph:"🏠"
+  },
+  {
+    idx:9, id:"arumstay", name:"Arum Stay",
+    area:"mapo", loc:"Hapjeong · Mapo",
+    beds:2, baths:1, max:"Up to 6 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:10, id:"chatstay", name:"Chat Stay",
+    area:"mapo", loc:"Hapjeong · Mapo",
+    beds:2, baths:1, max:"Up to 6 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:11, id:"Chic stay Hapjeong", name:"Chic stay Hapjeong",
+    area:"mapo", loc:"Hapjeong · Mapo",
+    beds:2, baths:1, max:"Up to 6 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:12, id:"MangwonRoo", name:"MangwonRoo",
+    area:"mapo", loc:"Mangwon · Mapo",
+    beds:2, baths:1, max:"Up to 7 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:13, id:"PIOLA Stay Mapo", name:"PIOLA Stay Mapo",
+    area:"mapo", loc:"Mapo",
+    beds:2, baths:1, max:"Up to 4 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:14, id:"stayeum", name:"Stay Eum",
+    area:"mapo", loc:"Gongdeuk · Mapo",
+    beds:4, baths:1, max:"Up to 10 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:15, id:"staygyeol", name:"Stay Gyeol",
+    area:"mapo", loc:"Gongdeuk · Mapo",
+    beds:2, baths:1, max:"Up to 6 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:16, id:"Stay Heritage urban loft arex gongdeok", name:"Stay Heritage urban loft arex gongdeok",
+    area:"mapo", loc:"Gongdeuk · Mapo",
+    beds:3, baths:1, max:"Up to 8 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:17, id:"YG stay house", name:"YG stay house",
+    area:"mapo", loc:"Hapjeong · Mapo",
+    beds:2, baths:1, max:"Up to 4 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:18, id:"Piola Stay Heritage", name:"Piola Stay Heritage",
+    area:"hanok", loc:"Sungin-dong",
+    beds:3, baths:2, max:"Up to 9 guests",
+    hanok:true,
+    imhj:true,
+    ph:"🏯"
+  },
+  {
+    idx:19, id:"Sodaminn", name:"Sodaminn",
+    area:"hanok", loc:"Gyeongbokgung",
+    beds:4, baths:2, max:"Up to 8 guests",
+    hanok:true,
+    imhj:true,
+    ph:"🏯"
+  },
+  {
+    idx:20, id:"Stay Heritage Gyeongbokgung", name:"Stay Heritage Gyeongbokgung",
+    area:"hanok", loc:"Gyeongbokgung",
+    beds:3, baths:2, max:"Up to 10 guests",
+    hanok:true,
+    imhj:true,
+    ph:"🏯"
+  },
+  {
+    idx:21, id:"Stay Heritage Gyeongbokgung 2", name:"Stay Heritage Gyeongbokgung 2",
+    area:"hanok", loc:"Gyeongbokgung",
+    beds:4, baths:2, max:"Up to 10 guests",
+    hanok:true,
+    imhj:true,
+    ph:"🏯"
+  },
+  {
+    idx:22, id:"Stay Heritage Hanok Seongsu", name:"Stay Heritage Hanok Seongsu",
+    area:"hanok", loc:"Seongsu",
+    beds:4, baths:2, max:"Up to 10 guests",
+    hanok:true,
+    imhj:true,
+    ph:"🏯"
+  },
+  {
+    idx:23, id:"Stay Heritage Insadong", name:"Stay Heritage Insadong",
+    area:"hanok", loc:"Insadong",
+    beds:3, baths:2, max:"Up to 9 guests",
+    hanok:true,
+    imhj:true,
+    ph:"🏯"
+  },
+  {
+    idx:24, id:"Stay The Arts Seoul Forest", name:"Stay The Arts Seoul Forest",
+    area:"seongsu", loc:"Seoul Forest · Seongsu",
+    beds:3, baths:1, max:"Up to 12 guests",
+    hanok:false,
+    imhj:true,
+    ph:"🌲"
+  },
+  {
+    idx:25, id:"Onul Stay", name:"Onul Stay",
+    area:"seongsu", loc:"Seongsu",
+    beds:2, baths:1, max:"Up to 8 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:26, id:"Stay Heritage Seongsoo", name:"Stay Heritage Seongsu",
+    area:"seongsu", loc:"Seongsu",
+    beds:3, baths:1, max:"Up to 12 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:27, id:"piolastay seongsu", name:"Piola Stay Seongsu",
+    area:"seongsu", loc:"Seongsu",
+    beds:2, baths:1, max:"Up to 6 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:28, id:"Check in H", name:"Check in H",
+    area:"hongdae", loc:"Hongdae",
+    beds:4, baths:4, max:"Up to 10 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:29, id:"Hongik Chae", name:"Hongik Chae",
+    area:"hongdae", loc:"Hongdae",
+    beds:2, baths:1, max:"Up to 6 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:30, id:"JuneStayHongdae", name:"June Stay Hongdae",
+    area:"hongdae", loc:"Hongdae",
+    beds:2, baths:1, max:"Up to 6 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:31, id:"Memory Maison", name:"Memory Maison",
+    area:"hongdae", loc:"Hongdae",
+    beds:5, baths:1, max:"Up to 15 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:32, id:"Memory Stay 3", name:"Memory Stay 3",
+    area:"hongdae", loc:"Hongdae",
+    beds:3, baths:1, max:"Up to 10 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:33, id:"Su Casa Yeonnam", name:"Su Casa Yeonnam",
+    area:"hongdae", loc:"Hongdae",
+    beds:3, baths:1, max:"Up to 10 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:34, id:"WonieStayHongdae", name:"Wonie Stay Hongdae",
+    area:"hongdae", loc:"Hongdae",
+    beds:2, baths:1, max:"Up to 7 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:35, id:"bunnystay", name:"Bunny Stay",
+    area:"hongdae", loc:"Hongdae",
+    beds:3, baths:1, max:"Up to 8 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:36, id:"pasetostayhongdae", name:"Paseto Stay Hongdae",
+    area:"hongdae", loc:"Hongdae",
+    beds:2, baths:2, max:"Up to 6 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:37, id:"Stay Heritage Seoul Station", name:"Stay Heritage Seoul Station",
+    area:"yongsan", loc:"Seoul Station",
+    beds:2, baths:1, max:"Up to 6 guests",
+    hanok:false,
+    imhj:true,
+    ph:"🏠"
+  },
+  {
+    idx:38, id:"Owner Aum", name:"OwneRaum",
+    area:"yongsan", loc:"Seoul Station",
+    beds:3, baths:3, max:"Up to 9 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:39, id:"Stay Aurora Yongsan", name:"Stay Aurora Yongsan",
+    area:"yongsan", loc:"Yongsan",
+    beds:2, baths:1, max:"Up to 4 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:40, id:"stayhavenyongsan", name:"Stay Haven Yongsan",
+    area:"yongsan", loc:"Yongsan",
+    beds:3, baths:1, max:"Up to 8 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:41, id:"Cozio Stay", name:"Cozio Stay",
+    area:"jongno", loc:"Jongno",
+    beds:4, baths:2, max:"Up to 8 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:42, id:"Junie Stay", name:"Namsan Stay",
+    area:"jongno", loc:"Myeongdong",
+    beds:2, baths:1, max:"Up to 4 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:43, id:"PIOLA Stay Dongdaemun1", name:"PIOLA Stay Dongdaemun1",
+    area:"jongno", loc:"Dongdaemun",
+    beds:3, baths:1, max:"Up to 8 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:44, id:"PIOLA Stay Dongdaemun2", name:"PIOLA Stay Dongdaemun2",
+    area:"jongno", loc:"Dongdaemun",
+    beds:3, baths:1, max:"Up to 8 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:45, id:"PIOLA Stay Dongdaemun3", name:"PIOLA Stay Dongdaemun3",
+    area:"jongno", loc:"Dongdaemun",
+    beds:3, baths:1, max:"Up to 8 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:46, id:"restinjamsil", name:"Rest in Jamsil",
+    area:"songpa", loc:"Seokchon · Songpa",
+    beds:2, baths:1, max:"Up to 5 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:47, id:"stayforet", name:"Stay Foret",
+    area:"songpa", loc:"Garak · Songpa",
+    beds:2, baths:1, max:"Up to 4 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:48, id:"gac", name:"Gwanganchae",
+    area:"busan", loc:"Gwangalli · Busan",
+    beds:0, baths:1, max:"",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:49, id:"SpaceandMood", name:"Space and Mood",
+    area:"busan", loc:"Gwangalli · Busan",
+    beds:2, baths:1, max:"Up to 6 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  },
+  {
+    idx:50, id:"Staybusan", name:"Staybusan",
+    area:"busan", loc:"Haeundae · Busan",
+    beds:3, baths:1, max:"Up to 8 guests",
+    hanok:false,
+    imhj:false,
+    ph:"🏠"
+  }
+];
+
+
+// 카드 생성
+const grid = document.getElementById('grid');
+STAYS.forEach(s => {
+  const photos = PHOTO_DATA[s.id] || [];
+  const hasPh  = photos.length > 0;
+
+  const bedsLabel  = s.beds  > 0 ? `${s.beds} Bed${s.beds>1?'s':''}` : '0 Beds';
+  const bathsLabel = s.baths > 0 ? `${s.baths} Bath${s.baths>1?'s':''}` : '0 Baths';
+  const bedsZero   = s.beds  === 0;
+  const bathsZero  = s.baths === 0;
+
+  const badges = [];
+  if(s.imhj)        badges.push(`<span class="badge imhj">STAY HERITAGE</span>`);
+  if(s.hanok)       badges.push(`<span class="badge hanok">HANOK</span>`);
+  if(s.area==='busan') badges.push(`<span class="badge busan">BUSAN</span>`);
+
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.area = s.area;
+  card.onclick = () => openModal(s);
+  card.innerHTML = `
+    <div class="card-img">
+      <div class="ph">
+        <span class="ph-icon">${s.ph}</span>
+        <span class="ph-hint">Photo coming soon</span>
+      </div>
+      ${hasPh ? `<img src="${photos[0]}" alt="${s.name}" onload="this.classList.add('loaded')">` : ''}
+      <span class="num-badge">#${s.idx}</span>
+      ${badges.join('')}
+    </div>
+    <div class="card-body">
+      <div class="card-loc">📍 ${s.loc}</div>
+      <div class="card-name">${s.name}</div>
+      <div class="card-specs">
+        <span class="spec${bedsZero?' zero':''}">🛏 ${bedsLabel}</span>
+        <span class="spec${bathsZero?' zero':''}">🚿 ${bathsLabel}</span>
+        ${s.max ? `<span class="spec guests">👥 ${s.max}</span>` : ''}
+      </div>
+      <a href="https://open.kakao.com/o/sqJsykki" target="_blank" class="card-cta" onclick="event.stopPropagation()">
+        💬 &nbsp;Book via KakaoTalk
+      </a>
+    </div>`;
+  grid.appendChild(card);
+});
+
+updateCount();
+
+// 필터
+function setFilter(area, btn) {
+  document.querySelectorAll('.fbtn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.card').forEach(c => {
+    c.classList.toggle('hide', area !== 'all' && c.dataset.area !== area);
+  });
+  updateCount();
+}
+function updateCount() {
+  const n = document.querySelectorAll('.card:not(.hide)').length;
+  document.getElementById('fc').textContent = n + ' stays';
+}
+
+// 슬라이더
+function goPhoto(idx) {
+  const list = window._photos || [];
+  if(!list.length) return;
+  idx = (idx + list.length) % list.length;
+  window._photoIdx = idx;
+  const photo = document.getElementById('modal-photo');
+  const ph    = document.getElementById('modal-ph');
+  photo.classList.remove('loaded');
+  photo.src = list[idx];
+  photo.onload = () => {
+    photo.classList.add('loaded');
+    ph.style.display='none';
+    photo.onclick = () => openLightbox(list, idx);
+  };
+  document.querySelectorAll('.dot').forEach((d,i) => d.classList.toggle('on', i===idx));
+}
+
+// 모달
+function openModal(s) {
+  document.getElementById('modal-loc').textContent  = '📍 ' + s.loc;
+  document.getElementById('modal-name').textContent = s.name;
+
+  const bedsLabel  = s.beds  > 0 ? `${s.beds} Bed${s.beds>1?'s':''}` : '0 Beds';
+  const bathsLabel = s.baths > 0 ? `${s.baths} Bath${s.baths>1?'s':''}` : '0 Baths';
+  document.getElementById('modal-specs').innerHTML =
+    `<span class="spec${s.beds===0?' zero':''}">🛏 ${bedsLabel}</span>
+     <span class="spec${s.baths===0?' zero':''}">🚿 ${bathsLabel}</span>
+     ${s.max ? `<span class="spec guests">👥 ${s.max}</span>` : ''}
+     ${s.hanok ? '<span class="spec">🏯 Hanok</span>' : ''}
+     <span class="spec" style="background:#E8F8EE;color:#1A6B35">✅ Recovery Ready</span>`;
+
+  const ph    = document.getElementById('modal-ph');
+  const photo = document.getElementById('modal-photo');
+  const list  = PHOTO_DATA[s.id] || [];
+  window._photos   = list;
+  window._photoIdx = 0;
+  ph.textContent = s.ph;
+  ph.style.display = '';
+  photo.classList.remove('loaded');
+
+  const dotsEl = document.getElementById('modal-dots');
+  const prevEl = document.getElementById('modal-prev');
+  const nextEl = document.getElementById('modal-next');
+
+  if(list.length > 0) {
+    photo.src = list[0];
+    photo.onload = () => {
+      photo.classList.add('loaded'); ph.style.display='none';
+      photo.onclick = () => openLightbox(list, 0);
+    };
+    dotsEl.innerHTML = list.map((_,i) => `<span class="dot${i===0?' on':''}" onclick="goPhoto(${i})"></span>`).join('');
+    prevEl.style.display = list.length > 1 ? 'flex' : 'none';
+    nextEl.style.display = list.length > 1 ? 'flex' : 'none';
+  } else {
+    dotsEl.innerHTML = '';
+    prevEl.style.display = nextEl.style.display = 'none';
+  }
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') closeModal(); });
+
+// ── LIGHTBOX ──
+function openLightbox(photos, idx) {
+  window._lbPhotos = photos;
+  window._lbIdx = idx;
+  lbGo(idx);
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function lbGo(idx) {
+  const list = window._lbPhotos || [];
+  if (!list.length) return;
+  idx = (idx + list.length) % list.length;
+  window._lbIdx = idx;
+  const img = document.getElementById('lb-img');
+  img.src = list[idx];
+  document.getElementById('lb-counter').textContent = (idx+1) + ' / ' + list.length;
+  // prev/next 버튼 표시
+  document.querySelector('.lightbox-prev').style.display = list.length > 1 ? '' : 'none';
+  document.querySelector('.lightbox-next').style.display = list.length > 1 ? '' : 'none';
+}
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+// 키보드 지원
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('lightbox').classList.contains('open')) return;
+  if (e.key === 'ArrowRight') lbGo(window._lbIdx + 1);
+  if (e.key === 'ArrowLeft')  lbGo(window._lbIdx - 1);
+  if (e.key === 'Escape') closeLightbox();
+});
+
+</script>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="if(event.target===this||event.target.classList.contains('lightbox'))closeLightbox()">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <button class="lightbox-prev" onclick="event.stopPropagation();lbGo(window._lbIdx-1)">‹</button>
+  <img class="lightbox-img" id="lb-img" alt="" onclick="event.stopPropagation()">
+  <button class="lightbox-next" onclick="event.stopPropagation();lbGo(window._lbIdx+1)">›</button>
+  <div class="lightbox-counter" id="lb-counter"></div>
+</div>
+
+</body>
+</html>
